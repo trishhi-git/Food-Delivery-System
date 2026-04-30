@@ -1,0 +1,87 @@
+<div class="dashboard-wrapper">
+  
+  <div class="header-section">
+    <h2 class="title">🍽️ Discover Restaurants</h2>
+    <p class="subtitle">Find the best food in your area</p>
+  </div>
+
+  <div class="grid" *ngIf="!selectedRestaurant">
+    <div class="card restaurant-card" *ngFor="let r of restaurants">
+      
+      <!-- Fixed image source -->
+      <div class="card-img-container">
+        <img [src]="'https://picsum.photos/seed/' + r.id + '/400/250'" alt="Restaurant Image" />
+        <div class="img-overlay"></div>
+      </div>
+
+      <div class="card-content">
+        <h3>{{ r.name }}</h3>
+        <p class="location"><i class="fa-solid fa-location-dot"></i> {{ r.location }}</p>
+        
+        <button class="btn-order" (click)="selectRestaurant(r)">
+          View Menu <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU SECTION -->
+  <div class="menu-section" *ngIf="selectedRestaurant">
+    <div class="menu-header">
+      <button class="btn-back" (click)="closeMenu()"><i class="fa-solid fa-arrow-left"></i> Back to Restaurants</button>
+      <h3>Menu for {{ selectedRestaurant.name }}</h3>
+    </div>
+
+    <div class="empty-state" *ngIf="menuItems.length === 0">
+      <p>No menu items available for this restaurant.</p>
+    </div>
+
+    <div class="menu-grid">
+      <div class="card menu-card" *ngFor="let item of menuItems">
+        <div class="menu-info">
+          <h4>{{ item.name }}</h4>
+          <p class="price">₹{{ item.price }}</p>
+        </div>
+        <div class="menu-actions">
+          <button class="btn-qty" (click)="decreaseQuantity(item)">-</button>
+          <span class="qty">{{ item.quantity }}</span>
+          <button class="btn-qty" (click)="increaseQuantity(item)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CART SUMMARY -->
+    <div class="cart-summary" *ngIf="cartTotal > 0">
+      <div class="cart-total">
+        <span>Total Price:</span>
+        <span class="amount">₹{{ cartTotal }}</span>
+      </div>
+      <button class="btn-place-order" (click)="placeOrder()">
+        Confirm Order <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h2 class="title">📦 My Recent Orders</h2>
+  </div>
+
+  <div class="grid">
+    <div class="card order-card" *ngFor="let o of orders">
+      <div class="order-header">
+        <span class="order-id">#ORD-{{ o.orderId }}</span>
+        <span class="status-badge" [ngClass]="o.status?.toLowerCase() || 'placed'">{{ o.status || 'PLACED' }}</span>
+      </div>
+      
+      <div class="order-details">
+        <p *ngIf="o.items"><strong>Items:</strong> {{ o.items }}</p>
+        <p><strong>Total Amount:</strong> ₹{{ o.totalAmount }}</p>
+        <p><strong>Restaurant:</strong> {{ o.restaurantName }}</p>
+      </div>
+    </div>
+    <div class="empty-state" *ngIf="orders.length === 0">
+      <p>You haven't placed any orders yet.</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,8 @@
+<nav class="navbar" *ngIf="isLoggedIn()">
+  <h2><i class="fa-solid fa-burger"></i> FoodHub</h2>
+  <button class="btn-logout" (click)="logout()">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+  </button>
+</nav>
+
+<router-outlet></router-outlet>

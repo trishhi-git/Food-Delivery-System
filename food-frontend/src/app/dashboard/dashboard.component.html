@@ -1,0 +1,14 @@
+<h2>Restaurants</h2>
+
+<button routerLink="/orders">My Orders</button>
+
+<div *ngFor="let r of restaurants">
+  <h3>{{r.name}}</h3>
+  <p>{{r.location}}</p>
+
+  <button (click)="placeOrder(r)">Order</button>
+
+  <hr>
+</div>
+
+<p style="color:green;">{{message}}</p>

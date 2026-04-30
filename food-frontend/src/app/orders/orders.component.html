@@ -1,0 +1,11 @@
+<h2>My Orders</h2>
+
+<p style="color:red;">{{message}}</p>
+
+<div *ngFor="let o of orders">
+  <h3>Order ID: {{o.orderId}}</h3>
+  <p>Restaurant: {{o.restaurantName}}</p>
+  <p>Amount: ₹{{o.totalAmount}}</p>
+  <p>Status: {{o.status}}</p>
+  <hr>
+</div>

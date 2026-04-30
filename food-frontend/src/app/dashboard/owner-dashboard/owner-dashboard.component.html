@@ -1,0 +1,120 @@
+<div class="dashboard-wrapper">
+  
+  <div class="header-section">
+    <h2 class="title">🏪 Owner Dashboard</h2>
+    <p class="subtitle">Manage your restaurants and incoming orders</p>
+  </div>
+
+  <div class="dashboard-content">
+    
+    <!-- LEFT COLUMN: RESTAURANTS -->
+    <div class="column">
+      
+      <!-- Restaurant management is now handled during registration -->
+
+      <h3 class="section-title">My Restaurants</h3>
+      
+      <div class="grid-single">
+        <div class="card restaurant-card" *ngFor="let r of restaurants" 
+             [class.selected]="selectedRestaurantId === r.id"
+             (click)="loadOrders(r.id)">
+          
+          <div class="card-img-container">
+            <img [src]="'https://picsum.photos/seed/rest' + r.id + '/400/200'" alt="Restaurant" />
+            <div class="img-overlay"></div>
+          </div>
+
+          <div class="card-content">
+            <h4>{{ r.name }}</h4>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> {{ r.location }}</p>
+            <span class="view-orders-txt">Click to view orders <i class="fa-solid fa-chevron-right"></i></span>
+          </div>
+        </div>
+        
+        <div class="empty-state" *ngIf="restaurants.length === 0">
+          <p>You haven't added any restaurants yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: MENU & ORDERS -->
+    <div class="column">
+      
+      <!-- MENU MANAGEMENT -->
+      <div *ngIf="selectedRestaurantId" class="menu-management-section">
+        <h3 class="section-title">Menu Management</h3>
+        
+        <div class="card add-menu-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Item Name</label>
+              <input type="text" placeholder="e.g. Margherita Pizza" [(ngModel)]="newMenuItem.name" />
+            </div>
+            <div class="form-group">
+              <label>Price (₹)</label>
+              <input type="number" placeholder="e.g. 299" [(ngModel)]="newMenuItem.price" />
+            </div>
+            <button class="btn-primary" (click)="addMenuItem()" style="align-self: flex-end; margin-bottom: 15px;">
+              Add Item
+            </button>
+          </div>
+        </div>
+        
+        <div class="menu-list" *ngIf="menuItems.length > 0">
+          <div class="menu-item-badge" *ngFor="let item of menuItems">
+            {{ item.name }} - ₹{{ item.price }}
+          </div>
+        </div>
+      </div>
+
+      <hr *ngIf="selectedRestaurantId" style="margin: 20px 0; border: 1px solid var(--border-color);" />
+
+      <h3 class="section-title">
+        Incoming Orders 
+        <span class="badge" *ngIf="orders.length">{{ orders.length }}</span>
+      </h3>
+
+      <div class="empty-state" *ngIf="!selectedRestaurantId">
+        <i class="fa-solid fa-store" style="font-size: 2rem; margin-bottom: 10px; color: var(--text-muted)"></i>
+        <p>Select a restaurant to view its orders</p>
+      </div>
+
+      <div class="empty-state" *ngIf="selectedRestaurantId && orders.length === 0">
+        <p>No orders yet for this restaurant.</p>
+      </div>
+
+      <div class="grid-single">
+        <div class="card order-card" *ngFor="let o of orders">
+          
+          <div class="order-header">
+            <span class="order-id">#ORD-{{ o.id || o.orderId }}</span>
+            <span class="status-badge" [ngClass]="(o.status || 'PLACED').toLowerCase()">
+              {{ o.status || 'PLACED' }}
+            </span>
+          </div>
+
+          <div class="order-details">
+            <p *ngIf="o.items"><strong>Items:</strong> {{ o.items }}</p>
+            <p><strong>Total Amount:</strong> ₹{{ o.totalAmount }}</p>
+          </div>
+
+          <div class="order-actions">
+            <button class="btn-action btn-prepare" 
+                    [disabled]="o.status === 'PREPARING' || o.status === 'DELIVERED'"
+                    (click)="updateStatus(o.id || o.orderId, 'PREPARING')">
+              <i class="fa-solid fa-fire-burner"></i> Prepare
+            </button>
+            
+            <button class="btn-action btn-deliver" 
+                    [disabled]="o.status !== 'PREPARING'"
+                    (click)="updateStatus(o.id || o.orderId, 'DELIVERED')">
+              <i class="fa-solid fa-motorcycle"></i> Deliver
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

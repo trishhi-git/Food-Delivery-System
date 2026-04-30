@@ -1,0 +1,103 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: authService
+                fallbackUri: forward:/fallback/auth
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userService
+                fallbackUri: forward:/fallback/user
+
+        - id: restaurant-service
+          uri: lb://RESTAURANT-SERVICE
+          predicates:
+            - Path=/restaurants/**, /menu/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: restaurantService
+                fallbackUri: forward:/fallback/restaurant
+
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderService
+                fallbackUri: forward:/fallback/order
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      authService:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      userService:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      restaurantService:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+      orderService:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

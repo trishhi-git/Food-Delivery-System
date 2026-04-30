@@ -1,0 +1,29 @@
+# Java/Gradle
+.gradle/
+build/
+bin/
+*.class
+
+# Maven
+target/
+
+# IDEs
+.metadata/
+.settings/
+.project
+.classpath
+.vscode/
+.idea/
+*.iml
+*.swp
+*.log
+
+# Node/Angular (food-frontend)
+food-frontend/node_modules/
+food-frontend/dist/
+food-frontend/.angular/
+
+# Security
+application.properties
+*.key
+*.secret

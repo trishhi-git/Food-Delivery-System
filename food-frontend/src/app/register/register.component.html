@@ -1,0 +1,105 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="logo-header">
+      <i class="fa-solid fa-user-plus"></i>
+      <h2>Create Account</h2>
+    </div>
+    
+    <p class="subtitle">Join FoodHub today and get started.</p>
+
+    <!-- 🔴 Error / Success -->
+    <div class="error-msg" *ngIf="message" [class.success]="message.includes('successful')">
+      <i class="fa-solid fa-circle-info"></i> {{ message }}
+    </div>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <div class="input-icon">
+        <i class="fa-regular fa-user"></i>
+        <input
+          type="text"
+          placeholder="John Doe"
+          [(ngModel)]="user.name"
+        />
+      </div>
+      <div class="field-error" *ngIf="validationErrors.name">{{ validationErrors.name }}</div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-icon">
+        <i class="fa-regular fa-envelope"></i>
+        <input
+          type="email"
+          placeholder="name@example.com"
+          [(ngModel)]="user.email"
+        />
+      </div>
+      <div class="field-error" *ngIf="validationErrors.email">{{ validationErrors.email }}</div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-icon">
+        <i class="fa-solid fa-lock"></i>
+        <input
+          type="password"
+          placeholder="Create a strong password"
+          [(ngModel)]="user.password"
+        />
+      </div>
+      <div class="field-error" *ngIf="validationErrors.password">{{ validationErrors.password }}</div>
+    </div>
+
+    <div class="form-group">
+      <label>Register as</label>
+      <div class="role-selector">
+        <button 
+          [class.active]="user.role === 'USER'" 
+          (click)="user.role = 'USER'"
+          class="role-btn">User
+        </button>
+        <button 
+          [class.active]="user.role === 'OWNER'" 
+          (click)="user.role = 'OWNER'"
+          class="role-btn">Owner
+        </button>
+      </div>
+    </div>
+
+    <!-- OWNER RESTAURANT DETAILS -->
+    <div *ngIf="user.role === 'OWNER'" class="form-group">
+      <label>Restaurant Name</label>
+      <div class="input-icon">
+        <i class="fa-solid fa-store"></i>
+        <input
+          type="text"
+          placeholder="e.g. Spice Route"
+          [(ngModel)]="restaurantName"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="user.role === 'OWNER'" class="form-group">
+      <label>Location</label>
+      <div class="input-icon">
+        <i class="fa-solid fa-location-dot"></i>
+        <input
+          type="text"
+          placeholder="e.g. Downtown, NY"
+          [(ngModel)]="restaurantLocation"
+        />
+      </div>
+    </div>
+
+    <button class="btn-primary" (click)="register()">
+      Create Account
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
+    <p class="register-link">
+      Already have an account? <a routerLink="/">Sign In</a>
+    </p>
+
+  </div>
+</div>
