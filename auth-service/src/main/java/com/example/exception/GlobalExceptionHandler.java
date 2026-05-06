@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     }
 
     // Runtime errors (login, etc.)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public Map<String, String> handleRuntimeException(RuntimeException ex) {
 

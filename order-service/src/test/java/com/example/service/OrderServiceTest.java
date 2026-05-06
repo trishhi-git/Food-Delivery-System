@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.example.dto.OrderCreateResponse;
 
 import java.util.List;
 
@@ -27,12 +28,15 @@ class OrderServiceTest {
     @Mock
     private RestaurantClient restaurantClient;
 
+    @Mock
+    private RazorpayService razorpayService;
+
     @InjectMocks
     private OrderService service;
 
     // ✅ TEST CREATE ORDER
     @Test
-    void testCreateOrder() {
+    void testCreateOrder() throws Exception {
 
         Order order = new Order();
         order.setUserId(1L);
@@ -44,11 +48,13 @@ class OrderServiceTest {
         restaurant.setName("Dominos");
 
         when(restaurantClient.getRestaurantById(1L)).thenReturn(restaurant);
+        when(razorpayService.createOrder(anyDouble(), anyString())).thenReturn("order_abc123");
         when(repo.save(order)).thenReturn(order);
 
-        Order result = service.createOrder(order);
+        OrderCreateResponse result = service.createOrder(order);
 
-        assertEquals(OrderStatus.PLACED, result.getStatus());
+        assertEquals("PLACED", result.getStatus());
+        assertEquals("order_abc123", result.getRazorpayOrderId());
         verify(repo, times(1)).save(order);
     }
 
@@ -76,7 +82,7 @@ class OrderServiceTest {
     
     //create order null status case
     @Test
-    void testCreateOrder_StatusNull() {
+    void testCreateOrder_StatusNull() throws Exception {
 
         Order order = new Order();
         order.setUserId(1L);
@@ -88,11 +94,13 @@ class OrderServiceTest {
         restaurant.setName("Dominos");
 
         when(restaurantClient.getRestaurantById(1L)).thenReturn(restaurant);
+        when(razorpayService.createOrder(anyDouble(), anyString())).thenReturn("order_xyz789");
         when(repo.save(order)).thenReturn(order);
 
-        Order result = service.createOrder(order);
+        OrderCreateResponse result = service.createOrder(order);
 
-        assertEquals(OrderStatus.PLACED, result.getStatus());
+        assertEquals("PLACED", result.getStatus());
+        assertEquals("order_xyz789", result.getRazorpayOrderId());
     }
     
     

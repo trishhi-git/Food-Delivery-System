@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
 
         return errors;
     }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public Map<String, String> handleGeneralException(Exception ex) {
 

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import com.example.entity.User;
 import com.example.repository.UserRepository;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * UserController — handles registration and user listing.
+ * Passwords are now BCrypt-hashed before saving to the database.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -25,21 +28,27 @@ public class UserController {
     @Autowired
     private UserRepository repo;
 
-    // ✅ REGISTER USER (FIXED)
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    // ✅ REGISTER USER
     @PostMapping
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
 
         log.info("Registering user: {}", user.getEmail());
 
-        // ✅ CHECK DUPLICATE EMAIL
+        // Check for duplicate email
         if (repo.findByEmail(user.getEmail()).isPresent()) {
             log.warn("User already exists: {}", user.getEmail());
             return ResponseEntity.badRequest().body("User already exists");
         }
-        
+
         if (user.getRole() == null) {
-            user.setRole("USER"); // default
+            user.setRole("USER"); // default role
         }
+
+        // ✅ Hash password with BCrypt before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = repo.save(user);
 

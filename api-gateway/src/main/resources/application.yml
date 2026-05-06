@@ -93,6 +93,17 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
 
+  timelimiter:
+    instances:
+      authService:
+        timeoutDuration: 5s
+      userService:
+        timeoutDuration: 5s
+      restaurantService:
+        timeoutDuration: 5s
+      orderService:
+        timeoutDuration: 5s
+
 management:
   endpoints:
     web:
@@ -101,3 +112,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+# JWT Config (must match all services)
+app:
+  jwt:
+    secret: FoodHubSecretKey2024SuperSecureLongKeyForHS256

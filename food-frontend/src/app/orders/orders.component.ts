@@ -22,7 +22,8 @@ export class OrdersComponent implements OnInit {
   loadOrders() {
     this.api.getOrders().subscribe({
       next: (res: any) => {
-        this.orders = res;
+        const userId = localStorage.getItem('userId');
+        this.orders = res.filter((o: any) => o.userId == userId);
       },
       error: () => {
         this.message = "Failed to load orders";

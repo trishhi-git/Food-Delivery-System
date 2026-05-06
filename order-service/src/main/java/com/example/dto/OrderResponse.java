@@ -8,6 +8,8 @@ public class OrderResponse {
     private String status;
     private Long userId;
     private String items;
+    private String deliveryAddress;
+    private Integer rating;
     
 	public Long getOrderId() {
 		return orderId;
@@ -44,6 +46,18 @@ public class OrderResponse {
 	}
 	public void setItems(String items) {
 		this.items = items;
+	}
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+	public Integer getRating() {
+		return rating;
+	}
+	public void setRating(Integer rating) {
+		this.rating = rating;
 	}
     
 }

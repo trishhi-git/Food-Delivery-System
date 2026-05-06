@@ -61,6 +61,11 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/menu/${restaurantId}`, this.getAuthHeaders());
   }
 
+  // ✅ Delete menu item (OWNER)
+  deleteMenuItem(id: number) {
+    return this.http.delete(`${this.baseUrl}/menu/${id}`, this.getAuthHeaders());
+  }
+
   // =========================
   // 📦 ORDER APIs
   // =========================
@@ -90,5 +95,24 @@ export class ApiService {
       data,
       this.getAuthHeaders()
     );
+  }
+
+  // ✅ Confirm payment after Razorpay checkout (called on payment success)
+  updatePaymentStatus(orderId: number, razorpayOrderId: string, status: string) {
+    return this.http.put(
+      `${this.baseUrl}/orders/${orderId}/payment?razorpayOrderId=${razorpayOrderId}&status=${status}`,
+      {},
+      this.getAuthHeaders()
+    );
+  }
+
+  // ✅ Cancel order
+  cancelOrder(id: number) {
+    return this.http.put(`${this.baseUrl}/orders/${id}/cancel`, {}, this.getAuthHeaders());
+  }
+
+  // ✅ Rate order
+  rateOrder(id: number, rating: number) {
+    return this.http.put(`${this.baseUrl}/orders/${id}/rate?rating=${rating}`, {}, this.getAuthHeaders());
   }
 }

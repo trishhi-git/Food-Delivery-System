@@ -22,6 +22,8 @@ public class MenuItem {
     @Positive(message = "Price must be positive")
     private Double price;
 
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class MenuItem {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

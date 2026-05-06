@@ -27,12 +27,14 @@ public class Order {
     private String items;
 
 
-    @NotNull(message= "Status cannot be empty")
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private String razorpayOrderId;
     private String paymentStatus;
+    
+    private String deliveryAddress;
+    private Integer rating;
     
 	public Long getId() {
 		return id;
@@ -87,4 +89,17 @@ public class Order {
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
+
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+	public Integer getRating() {
+		return rating;
+	}
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
 }

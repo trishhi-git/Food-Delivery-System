@@ -51,6 +51,10 @@
               <input type="text" placeholder="e.g. Margherita Pizza" [(ngModel)]="newMenuItem.name" />
             </div>
             <div class="form-group">
+              <label>Description</label>
+              <input type="text" placeholder="e.g. Cheese and Tomato..." [(ngModel)]="newMenuItem.description" />
+            </div>
+            <div class="form-group">
               <label>Price (₹)</label>
               <input type="number" placeholder="e.g. 299" [(ngModel)]="newMenuItem.price" />
             </div>
@@ -60,9 +64,15 @@
           </div>
         </div>
         
-        <div class="menu-list" *ngIf="menuItems.length > 0">
-          <div class="menu-item-badge" *ngFor="let item of menuItems">
-            {{ item.name }} - ₹{{ item.price }}
+        <div class="menu-list" *ngIf="menuItems.length > 0" style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="menu-item-badge" *ngFor="let item of menuItems" style="display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+            <div>
+              <strong>{{ item.name }}</strong> - ₹{{ item.price }}
+              <p *ngIf="item.description" style="margin: 4px 0 0; font-size: 0.85rem; color: #666;">{{ item.description }}</p>
+            </div>
+            <button (click)="deleteMenuItem(item.id)" style="background: none; border: none; color: #dc3545; cursor: pointer;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -96,6 +106,14 @@
           <div class="order-details">
             <p *ngIf="o.items"><strong>Items:</strong> {{ o.items }}</p>
             <p><strong>Total Amount:</strong> ₹{{ o.totalAmount }}</p>
+            <p *ngIf="o.deliveryAddress"><strong>Delivery Address:</strong> {{ o.deliveryAddress }}</p>
+            <p *ngIf="o.rating" style="margin-top: 10px; font-weight: 500;">
+              <strong>Rating: </strong> 
+              <i *ngFor="let star of [1,2,3,4,5]" 
+                 class="fa-star" 
+                 [ngClass]="star <= o.rating ? 'fa-solid' : 'fa-regular'" 
+                 style="color: #ffc107;"></i>
+            </p>
           </div>
 
           <div class="order-actions">

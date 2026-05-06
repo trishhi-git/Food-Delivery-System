@@ -30,4 +30,10 @@ public class MenuItemController {
         log.info("Fetching menu for restaurant {}", restaurantId);
         return repo.findByRestaurantId(restaurantId);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteMenuItem(@PathVariable("id") Long id) {
+        log.info("Deleting menu item {}", id);
+        repo.deleteById(id);
+    }
 }

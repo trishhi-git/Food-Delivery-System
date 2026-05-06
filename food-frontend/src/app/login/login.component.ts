@@ -96,7 +96,12 @@ export class LoginComponent {
         } else if (err.error && typeof err.error === 'object') {
           this.message = err.error.error || JSON.stringify(err.error);
         } else if (err.error) {
-          this.message = err.error;
+          try {
+            const parsed = JSON.parse(err.error);
+            this.message = parsed.error || err.error;
+          } catch (e) {
+            this.message = err.error;
+          }
         } else {
           this.message = 'Login failed. Please try again';
         }

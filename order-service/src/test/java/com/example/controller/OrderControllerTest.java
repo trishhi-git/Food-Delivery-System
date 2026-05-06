@@ -4,6 +4,7 @@ import com.example.entity.Order;
 import com.example.service.OrderService;
 import com.example.dto.OrderResponse;
 import com.example.status.OrderStatus;
+import com.example.dto.OrderCreateResponse;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,13 @@ class OrderControllerTest {
     @Test
     void testCreateOrder() throws Exception {
 
-        Order order = new Order();
-        order.setId(1L);
-        order.setUserId(1L);
-        order.setTotalAmount(200.0);
-        order.setStatus(OrderStatus.PLACED);
+        OrderCreateResponse response = new OrderCreateResponse();
+        response.setOrderId(1L);
+        response.setTotalAmount(200.0);
+        response.setStatus("PLACED");
 
         when(service.createOrder(org.mockito.ArgumentMatchers.any(Order.class)))
-                .thenReturn(order);
+                .thenReturn(response);
 
         String json = """
         {

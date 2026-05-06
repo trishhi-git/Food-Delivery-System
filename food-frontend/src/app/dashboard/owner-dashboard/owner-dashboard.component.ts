@@ -23,7 +23,8 @@ export class OwnerDashboardComponent {
   selectedRestaurantId: number | null = null;
   newMenuItem = {
     name: '',
-    price: null
+    description: '',
+    price: null as number | null
   };
 
 
@@ -32,6 +33,8 @@ export class OwnerDashboardComponent {
   addRestaurant() {
     this.api.addRestaurant(this.restaurant).subscribe(() => {
       alert('Restaurant added');
+      this.restaurant = { name: '', location: '' };
+      this.ngOnInit();
     });
   }
 
@@ -69,12 +72,23 @@ addMenuItem() {
     const item = {
       restaurantId: this.selectedRestaurantId,
       name: this.newMenuItem.name,
+      description: this.newMenuItem.description,
       price: this.newMenuItem.price
     };
     this.api.addMenuItem(item).subscribe(() => {
       alert('Menu Item added');
       this.newMenuItem.name = '';
+      this.newMenuItem.description = '';
       this.newMenuItem.price = null;
+      this.loadMenu(this.selectedRestaurantId!);
+    });
+  }
+}
+
+deleteMenuItem(id: number) {
+  if (confirm('Are you sure you want to delete this menu item?')) {
+    this.api.deleteMenuItem(id).subscribe(() => {
+      alert('Menu Item deleted');
       this.loadMenu(this.selectedRestaurantId!);
     });
   }

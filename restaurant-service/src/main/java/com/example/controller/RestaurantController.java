@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.Restaurant;
@@ -17,6 +18,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * RestaurantController — manages restaurants and their listings.
+ * JWT secret is now injected via @Value (no hardcoded string).
+ */
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
@@ -26,7 +31,8 @@ public class RestaurantController {
 
     private static final Logger log = LoggerFactory.getLogger(RestaurantController.class);
 
-    private static final String SECRET = "mysecretkeymysecretkeymysecretkey";
+    @Value("${app.jwt.secret}")
+    private String jwtSecret;
 
     // ✅ CREATE RESTAURANT (OWNER ONLY)
     @PostMapping
@@ -38,19 +44,19 @@ public class RestaurantController {
         String token = authHeader.substring(7);
 
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
         String role = claims.get("role", String.class);
-        Long userId = claims.get("userId", Integer.class).longValue(); // ⚠️ cast fix
+        Long userId = claims.get("userId", Integer.class).longValue();
 
         if (!"OWNER".equals(role)) {
             throw new RuntimeException("Only OWNER can create restaurant");
         }
 
-        // ✅ SET OWNER ID FROM TOKEN
+        // ✅ Set owner ID from JWT claims
         r.setOwnerId(userId);
 
         Restaurant saved = repo.save(r);
@@ -62,17 +68,13 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public Restaurant getById(@PathVariable("id") Long id) {
-
         log.info("Fetching restaurant with id={}", id);
-
         return repo.findById(id).orElseThrow();
     }
 
     @GetMapping
     public List<Restaurant> getAll() {
-
         log.info("Fetching all restaurants");
-
         return repo.findAll();
     }
 
