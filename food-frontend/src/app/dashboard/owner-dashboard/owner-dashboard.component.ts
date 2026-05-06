@@ -68,21 +68,34 @@ loadMenu(restaurantId: number) {
 }
 
 addMenuItem() {
-  if (this.selectedRestaurantId && this.newMenuItem.name && this.newMenuItem.price) {
-    const item = {
-      restaurantId: this.selectedRestaurantId,
-      name: this.newMenuItem.name,
-      description: this.newMenuItem.description,
-      price: this.newMenuItem.price
-    };
-    this.api.addMenuItem(item).subscribe(() => {
-      alert('Menu Item added');
-      this.newMenuItem.name = '';
-      this.newMenuItem.description = '';
-      this.newMenuItem.price = null;
-      this.loadMenu(this.selectedRestaurantId!);
-    });
+  if (!this.selectedRestaurantId) {
+    alert('Please select a restaurant first.');
+    return;
   }
+  if (!this.newMenuItem.name || this.newMenuItem.name.trim() === '' || 
+      !this.newMenuItem.description || this.newMenuItem.description.trim() === '' || 
+      !this.newMenuItem.price) {
+    alert('Please provide Name, Description, and Price for the new item.');
+    return;
+  }
+  if (this.newMenuItem.price <= 0) {
+    alert('Price must be a positive number.');
+    return;
+  }
+
+  const item = {
+    restaurantId: this.selectedRestaurantId,
+    name: this.newMenuItem.name.trim(),
+    description: this.newMenuItem.description.trim(),
+    price: this.newMenuItem.price
+  };
+  this.api.addMenuItem(item).subscribe(() => {
+    alert('Menu Item added');
+    this.newMenuItem.name = '';
+    this.newMenuItem.description = '';
+    this.newMenuItem.price = null;
+    this.loadMenu(this.selectedRestaurantId!);
+  });
 }
 
 deleteMenuItem(id: number) {

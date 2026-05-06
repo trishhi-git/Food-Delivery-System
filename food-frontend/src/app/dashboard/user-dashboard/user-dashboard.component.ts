@@ -84,6 +84,12 @@ export class UserDashboardComponent {
 
   placeOrder() {
     if (this.cartTotal === 0 || !this.selectedRestaurant || this.isProcessingOrder) return;
+
+    if (!this.deliveryAddress || this.deliveryAddress.trim() === '') {
+      alert("Please enter a valid delivery address.");
+      return;
+    }
+
     this.isProcessingOrder = true;
 
     const itemsList: string[] = [];
